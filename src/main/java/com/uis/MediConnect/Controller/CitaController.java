@@ -24,9 +24,10 @@ public class CitaController {
 
     @PostMapping("/ingresar")
     ResponseEntity<Cita> guardarCita(@RequestBody Cita cita){
-        if(cita != null){
+        Cita citaPrueba = citaService.buscarCita(cita.getIdCita());
+        if(cita != null && citaPrueba  == null){
             citaService.guardarCita(cita);
-            return new ResponseEntity<>(cita, HttpStatus.OK);
+            return new ResponseEntity<>(cita, HttpStatus.CREATED);
         }
         return  new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
@@ -49,7 +50,7 @@ public class CitaController {
     ResponseEntity<Cita> editarCita(@RequestBody Cita cita){
         Cita citaEditada = citaService.editarCita(cita);
         if(citaEditada != null ){
-            return new ResponseEntity<>(citaEditada, HttpStatus.OK);
+            return new ResponseEntity<>(citaEditada, HttpStatus.CREATED);
         }
         return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }

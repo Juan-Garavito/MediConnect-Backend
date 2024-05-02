@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional
 public class CiudadanoService implements ICiudadanoService{
@@ -26,6 +28,11 @@ public class CiudadanoService implements ICiudadanoService{
     @Override
     public Ciudadano buscarCiudadano(String idCiudadano) {
         return ciudadanoRepository.findById(idCiudadano).orElse(null);
+    }
+
+    @Override
+    public List<Ciudadano> buscarTodasCiudadano() {
+        return ciudadanoRepository.findAll();
     }
 
     @Override

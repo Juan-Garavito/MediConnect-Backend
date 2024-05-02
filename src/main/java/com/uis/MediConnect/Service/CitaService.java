@@ -10,7 +10,7 @@ import java.util.List;
 
 @Service
 @Transactional
-public class CitaService implements  ICitaServie{
+public class CitaService implements ICitaService {
 
     private final CitaRepository citaRepository;
 

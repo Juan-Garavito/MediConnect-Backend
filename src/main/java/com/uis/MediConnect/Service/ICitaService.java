@@ -1,11 +1,10 @@
 package com.uis.MediConnect.Service;
 
 import com.uis.MediConnect.Model.Cita;
-import com.uis.MediConnect.Model.Ciudadano;
 
 import java.util.List;
 
-public interface ICitaServie {
+public interface ICitaService {
 
     Cita guardarCita(Cita cita);
     Cita buscarCita(String idCita);

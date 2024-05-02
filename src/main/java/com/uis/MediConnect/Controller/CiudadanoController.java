@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/ciudadano")
@@ -23,9 +25,10 @@ public class CiudadanoController {
 
     @PostMapping("/ingresar")
     ResponseEntity<Ciudadano> guardarCiudadano(@RequestBody Ciudadano ciudadano){
-        if(ciudadano != null){
+        Ciudadano ciudadanoPrueba = ciudadanoService.buscarCiudadano(ciudadano.getNumerodocumento());
+        if(ciudadano != null && ciudadanoPrueba == null){
             ciudadanoService.guardarCiudadano(ciudadano);
-            return new ResponseEntity<>(ciudadano, HttpStatus.OK);
+            return new ResponseEntity<>(ciudadano, HttpStatus.CREATED);
         }
 
         return new ResponseEntity<>(ciudadano, HttpStatus.BAD_REQUEST);
@@ -41,11 +44,16 @@ public class CiudadanoController {
         return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
 
+    @GetMapping("/buscar")
+    ResponseEntity<List<Ciudadano>> buscarTodasCiudadano(){
+        return new ResponseEntity<>(ciudadanoService.buscarTodasCiudadano(), HttpStatus.OK);
+    }
+
     @PutMapping("/editar")
     ResponseEntity<Ciudadano> editarCiudadano(@RequestBody Ciudadano ciudadano){
        Ciudadano cd = ciudadanoService.editarCiudadano(ciudadano);
        if(cd != null){
-           return new ResponseEntity<>(ciudadano, HttpStatus.OK);
+           return new ResponseEntity<>(ciudadano, HttpStatus.CREATED);
        }
 
        return new ResponseEntity<>(ciudadano, HttpStatus.BAD_REQUEST);

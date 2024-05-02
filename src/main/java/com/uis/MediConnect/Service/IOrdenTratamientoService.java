@@ -5,7 +5,7 @@ import com.uis.MediConnect.Model.OrdenTratamiento;
 
 import java.util.List;
 
-public interface IOrdenTratamiento {
+public interface IOrdenTratamientoService {
 
     OrdenTratamiento guardarOrdenTratamiento(OrdenTratamiento orden);
     OrdenTratamiento buscarOrdenTratamiento(String idOrden);

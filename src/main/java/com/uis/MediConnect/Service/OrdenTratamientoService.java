@@ -10,7 +10,7 @@ import java.util.List;
 
 @Service
 @Transactional
-public class OrdenTratamientoService implements IOrdenTratamiento{
+public class OrdenTratamientoService implements IOrdenTratamientoService {
 
     private final OrdenTratamientoRepository ordenTratamientoRepository;
 

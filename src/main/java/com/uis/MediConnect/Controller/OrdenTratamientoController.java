@@ -23,9 +23,10 @@ public class OrdenTratamientoController {
 
     @PostMapping("/ingresar")
     ResponseEntity<OrdenTratamiento> ingresarOrdenTratamiento(@RequestBody OrdenTratamiento orden){
-        if (orden != null){
+        OrdenTratamiento ordenTratamiento = ordenTratamientoService.buscarOrdenTratamiento(orden.getIdOrdenTratamineto());
+        if (orden != null && ordenTratamiento == null){
             ordenTratamientoService.guardarOrdenTratamiento(orden);
-            return new ResponseEntity<>(orden, HttpStatus.OK);
+            return new ResponseEntity<>(orden, HttpStatus.CREATED);
         }
         return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
@@ -49,7 +50,7 @@ public class OrdenTratamientoController {
     ResponseEntity<OrdenTratamiento> editarOrdenTratamiento(@RequestBody  OrdenTratamiento orden){
         OrdenTratamiento ordenEditada = ordenTratamientoService.editarOrdenTratamiento(orden);
         if (ordenEditada != null){
-            return new ResponseEntity<>(ordenEditada, HttpStatus.OK);
+            return new ResponseEntity<>(ordenEditada, HttpStatus.CREATED);
         }
         return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
