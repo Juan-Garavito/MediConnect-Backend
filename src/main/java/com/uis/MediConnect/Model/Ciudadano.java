@@ -1,11 +1,10 @@
 package com.uis.MediConnect.Model;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "ciudadano")
@@ -22,6 +21,9 @@ public class Ciudadano {
     private String numerocelular;
     private String correo;
     private String password;
+    @ManyToMany(mappedBy = "ciudadanos")
+    private List<Rol> rol;
+
 
     public Ciudadano() {
 
