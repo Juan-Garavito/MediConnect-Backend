@@ -3,11 +3,15 @@ package com.uis.MediConnect.Controller;
 
 import com.uis.MediConnect.Model.Ciudadano;
 import com.uis.MediConnect.Service.CiudadanoService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -24,7 +28,7 @@ public class CiudadanoController {
     }
 
     @PostMapping("/ingresar")
-    ResponseEntity<Ciudadano> guardarCiudadano(@RequestBody Ciudadano ciudadano){
+    ResponseEntity<Ciudadano> guardarCiudadano(@Valid @RequestBody Ciudadano ciudadano){
         Ciudadano ciudadanoPrueba = ciudadanoService.buscarCiudadano(ciudadano.getNumerodocumento());
         if(ciudadano != null && ciudadanoPrueba == null){
             ciudadanoService.guardarCiudadano(ciudadano);
@@ -67,5 +71,17 @@ public class CiudadanoController {
         }
 
         return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+    }
+
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<?> respuestaErrorConLaPeticion(MethodArgumentNotValidException error){
+        HashMap<String, String> response = new HashMap<>();
+        error.getAllErrors().forEach(e -> {
+            String mensajeError = e.getDefaultMessage();
+            String celda = ((FieldError) e).getField();
+            response.put(celda, mensajeError);
+        });
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 }

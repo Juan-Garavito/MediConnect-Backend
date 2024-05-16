@@ -8,8 +8,8 @@ import java.util.List;
 @Table(name = "rol")
 public class Rol{
 
-    @Column(name = "idrol")
     @Id
+    @Column(name = "idrol")
     private Integer idRol;
     @Column(name = "descripcionrol")
     private String nameRol;

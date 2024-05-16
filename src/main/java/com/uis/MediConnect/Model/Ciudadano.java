@@ -2,6 +2,8 @@ package com.uis.MediConnect.Model;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 
 import java.util.Date;
 import java.util.List;
@@ -19,7 +21,9 @@ public class Ciudadano {
     private Integer idtiposangre;
     private String direccion;
     private String numerocelular;
+    @Email(message = "Este correo no es valido")
     private String correo;
+    @NotBlank(message = "Necesitas ingresar una contraseña")
     private String password;
     @ManyToMany(mappedBy = "ciudadanos")
     private List<Rol> rol;

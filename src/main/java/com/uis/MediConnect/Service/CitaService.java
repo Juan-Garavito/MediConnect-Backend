@@ -1,11 +1,15 @@
 package com.uis.MediConnect.Service;
 
+import com.uis.MediConnect.DTO.CitaDTO;
+import com.uis.MediConnect.Model.Chat;
 import com.uis.MediConnect.Model.Cita;
+import com.uis.MediConnect.Repository.ChatRepository;
 import com.uis.MediConnect.Repository.CitaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -13,10 +17,12 @@ import java.util.List;
 public class CitaService implements ICitaService {
 
     private final CitaRepository citaRepository;
+    private final ChatRepository chatRepository;
 
     @Autowired
-    public CitaService(CitaRepository citaRepository) {
+    public CitaService(CitaRepository citaRepository, ChatRepository chatRepository) {
         this.citaRepository = citaRepository;
+        this.chatRepository = chatRepository;
     }
 
 
@@ -52,5 +58,29 @@ public class CitaService implements ICitaService {
             return cita;
         }
         return null;
+    }
+
+    @Override
+    public List<CitaDTO> buscarCitaPorIdPaciente(String idPaciente) {
+        List<Cita> citas =  citaRepository.findAllByIdPaciente(idPaciente);
+        List<CitaDTO> citasDto = new ArrayList<>();
+        if(!citas.isEmpty()) {
+            String idChat;
+            for (Cita cita : citas) {
+                Chat chat = chatRepository.findByIdCita(cita.getIdCita());
+                idChat = null;
+                if (chat != null) {
+                    idChat = chat.getIdChat();
+                }
+                CitaDTO citaDTO = new CitaDTO.Builder().IdCita(cita.getIdCita())
+                        .FechaCita(cita.getFechaCita()).IdModalidadCita(cita.getIdModalidadCita())
+                        .IdPaciente(cita.getIdPaciente()).IdEspecialidad(cita.getIdEspecialidad())
+                        .IdFranjaHoraria(cita.getIdFranjaHoraria())
+                        .IdIps(cita.getIdIps()).IdChat(idChat).
+                        IdMedico(cita.getIdMedico()).build();
+                citasDto.add(citaDTO);
+            }
+        }
+        return citasDto;
     }
 }

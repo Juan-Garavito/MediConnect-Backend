@@ -1,5 +1,6 @@
 package com.uis.MediConnect.Service;
 
+import com.uis.MediConnect.DTO.CitaDTO;
 import com.uis.MediConnect.Model.Cita;
 
 import java.util.List;
@@ -11,5 +12,7 @@ public interface ICitaService {
     List<Cita> buscarTodasCitas();
     Cita editarCita(Cita cita);
     Cita eliminarCita(String idCita);
+
+    List<CitaDTO> buscarCitaPorIdPaciente(String idPaciente);
 
 }

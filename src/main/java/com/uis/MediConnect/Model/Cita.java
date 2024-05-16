@@ -6,7 +6,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 
-import java.util.Date;
+import java.time.LocalDate;
+
 
 @Entity
 @Table(name = "cita")
@@ -16,7 +17,7 @@ public class Cita {
     @Column(name = "idcita")
     private String idCita;
     @Column(name = "fechacita")
-    private Date fechaCita;
+    private LocalDate fechaCita;
     @Column(name = "idfranjahoraria")
     private Integer idFranjaHoraria;
     @Column(name = "idespecialidad")
@@ -33,7 +34,7 @@ public class Cita {
     public Cita() {
     }
 
-    public Cita(String idCita, Date fechaCita, Integer idFranjaHoraria, Integer idEspecialidad, Integer idModalidadCita, String idPaciente, String idMedico, Integer idIps) {
+    public Cita(String idCita, LocalDate fechaCita, Integer idFranjaHoraria, Integer idEspecialidad, Integer idModalidadCita, String idPaciente, String idMedico, Integer idIps) {
         this.idCita = idCita;
         this.fechaCita = fechaCita;
         this.idFranjaHoraria = idFranjaHoraria;
@@ -52,11 +53,11 @@ public class Cita {
         this.idCita = idCita;
     }
 
-    public Date getFechaCita() {
+    public LocalDate getFechaCita() {
         return fechaCita;
     }
 
-    public void setFechaCita(Date fechaCita) {
+    public void setFechaCita(LocalDate fechaCita) {
         this.fechaCita = fechaCita;
     }
 
