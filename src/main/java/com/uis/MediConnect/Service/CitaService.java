@@ -83,4 +83,30 @@ public class CitaService implements ICitaService {
         }
         return citasDto;
     }
+    
+    //Método para obtener las citas asociadas a un médico
+    @Override
+    public List<CitaDTO> buscarCitaPorIdMedico(String idmedico) {
+        List<Cita> citas =  citaRepository.findALLByIdMedico(idmedico);
+        List<CitaDTO> citasDto = new ArrayList<>();
+        if(!citas.isEmpty()) {
+            String idChat;
+            for (Cita cita : citas) {
+                Chat chat = chatRepository.findByIdCita(cita.getIdCita());
+                idChat = null;
+                if (chat != null) {
+                    idChat = chat.getIdChat();
+                }
+                CitaDTO citaDTO = new CitaDTO.Builder().IdCita(cita.getIdCita())
+                        .FechaCita(cita.getFechaCita()).IdModalidadCita(cita.getIdModalidadCita())
+                        .IdPaciente(cita.getIdPaciente()).IdEspecialidad(cita.getIdEspecialidad())
+                        .IdFranjaHoraria(cita.getIdFranjaHoraria())
+                        .IdIps(cita.getIdIps()).IdChat(idChat).
+                        IdMedico(cita.getIdMedico()).build();
+                citasDto.add(citaDTO);
+            }
+        }
+        return citasDto;
+    }
+    
 }

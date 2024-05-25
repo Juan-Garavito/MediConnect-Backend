@@ -12,4 +12,6 @@ import java.util.List;
 public interface CitaRepository extends JpaRepository<Cita, String> {
 
     List<Cita> findAllByIdPaciente(String idpaciente);
+    //Método para obtener las citas asociadas a un médico
+    public List<Cita> findALLByIdMedico(String idmedico);
 }

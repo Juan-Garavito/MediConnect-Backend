@@ -78,4 +78,17 @@ public class CitaController {
         }
         return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
+    
+    //Método para obtener las citas asociadas a un médico
+    @GetMapping("/buscar/medico/{idmedico}")
+    ResponseEntity<List<CitaDTO>> buscarCitaPorIdMedico(@PathVariable String idmedico){
+        List<CitaDTO> citas = citaService.buscarCitaPorIdMedico(idmedico);
+
+        if(!citas.isEmpty()){
+            return new ResponseEntity<>(citas, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+    }
+    
+    
 }

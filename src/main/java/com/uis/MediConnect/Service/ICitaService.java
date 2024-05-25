@@ -14,5 +14,7 @@ public interface ICitaService {
     Cita eliminarCita(String idCita);
 
     List<CitaDTO> buscarCitaPorIdPaciente(String idPaciente);
-
+    
+    //Método para obtener las citas asociadas a un médico
+    public List<CitaDTO> buscarCitaPorIdMedico(String idmedico);
 }
