@@ -69,8 +69,9 @@ public class CitaController {
         return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
 
-    @GetMapping("/buscar/paciente")
-    ResponseEntity<List<CitaDTO>> buscarCitaPorIdPaciente(@RequestParam String idPaciente){
+    //Solicitud para obtener las citas asociadas a un paciente
+    @GetMapping("/buscar/paciente/{idPaciente}")
+    ResponseEntity<List<CitaDTO>> buscarCitaPorIdPaciente(@PathVariable String idPaciente){
         List<CitaDTO> citas = citaService.buscarCitaPorIdPaciente(idPaciente);
 
         if(!citas.isEmpty()){
@@ -79,7 +80,7 @@ public class CitaController {
         return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
     
-    //Método para obtener las citas asociadas a un médico
+    //Solicitud para obtener las citas asociadas a un médico
     @GetMapping("/buscar/medico/{idmedico}")
     ResponseEntity<List<CitaDTO>> buscarCitaPorIdMedico(@PathVariable String idmedico){
         List<CitaDTO> citas = citaService.buscarCitaPorIdMedico(idmedico);

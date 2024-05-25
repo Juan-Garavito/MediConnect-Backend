@@ -60,6 +60,7 @@ public class CitaService implements ICitaService {
         return null;
     }
 
+    //Método para obtener las citas asociadas a un paciente
     @Override
     public List<CitaDTO> buscarCitaPorIdPaciente(String idPaciente) {
         List<Cita> citas =  citaRepository.findAllByIdPaciente(idPaciente);
