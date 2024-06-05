@@ -33,8 +33,9 @@ public class ChatService implements IChatService{
     @Override
     public void crearIdChat() {
         List<Cita> citas = citaRepository.findAll();
+        Integer idCitaRemota = 2;
         if(!citas.isEmpty()){
-            List<Cita> citasVirtuales = citas.stream().filter(cita->cita.getIdModalidadCita().equals(2) & cita.getFechaCita().equals(LocalDate.now())).collect(Collectors.toList());
+            List<Cita> citasVirtuales = citas.stream().filter(cita->cita.getIdModalidadCita().equals(idCitaRemota) & cita.getFechaCita().equals(LocalDate.now())).collect(Collectors.toList());
             for(Cita cita : citasVirtuales) {
                 String idChat = UUID.randomUUID().toString().substring(0,10);
 

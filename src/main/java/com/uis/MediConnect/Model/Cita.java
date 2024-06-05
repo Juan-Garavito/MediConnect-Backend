@@ -1,12 +1,10 @@
 package com.uis.MediConnect.Model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 
 import java.time.LocalDate;
+import java.util.List;
 
 
 @Entity
@@ -30,6 +28,7 @@ public class Cita {
     private String idMedico;
     @Column(name = "idips")
     private Integer idIps;
+
 
     public Cita() {
     }

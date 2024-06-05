@@ -6,39 +6,42 @@ public class CitaDTO {
 
     private String idCita;
     private LocalDate fechaCita;
-    private Integer idFranjaHoraria;
-    private Integer idEspecialidad;
-    private Integer idModalidadCita;
+    private String franjaHoraria;
+    private String especialidad;
+    private String modalidadCita;
     private String idPaciente;
-    private String idMedico;
-    private Integer idIps;
+    private String medico;
+    private String ips;
+    private String urlIps;
     private String idChat;
 
     public CitaDTO() {
     }
 
-    public CitaDTO(String idCita, LocalDate fechaCita, Integer idFranjaHoraria, Integer idEspecialidad, Integer idModalidadCita, String idPaciente, String idMedico, Integer idIps, String idChat) {
+    public CitaDTO(String idCita, LocalDate fechaCita, String franjaHoraria, String especialidad, String modalidadCita, String idPaciente, String medico, String ips, String urlIps, String idChat) {
         this.idCita = idCita;
         this.fechaCita = fechaCita;
-        this.idFranjaHoraria = idFranjaHoraria;
-        this.idEspecialidad = idEspecialidad;
-        this.idModalidadCita = idModalidadCita;
+        this.franjaHoraria = franjaHoraria;
+        this.especialidad = especialidad;
+        this.modalidadCita = modalidadCita;
         this.idPaciente = idPaciente;
-        this.idMedico = idMedico;
-        this.idIps = idIps;
+        this.medico = medico;
+        this.ips = ips;
+        this.urlIps = urlIps;
         this.idChat = idChat;
     }
 
     public CitaDTO(Builder builder) {
         this.idCita = builder.idCita;
         this.fechaCita = builder.fechaCita;
-        this.idFranjaHoraria = builder.idFranjaHoraria;
-        this.idEspecialidad = builder.idEspecialidad;
-        this.idModalidadCita = builder.idModalidadCita;
+        this.franjaHoraria = builder.idFranjaHoraria;
+        this.especialidad = builder.idEspecialidad;
+        this.modalidadCita = builder.idModalidadCita;
         this.idPaciente = builder.idPaciente;
-        this.idMedico = builder.idMedico;
-        this.idIps = builder.idIps;
+        this.medico = builder.idMedico;
+        this.ips = builder.idIps;
         this.idChat = builder.idChat;
+        this.urlIps = builder.urlIps;
     }
 
     public String getIdCita() {
@@ -49,32 +52,36 @@ public class CitaDTO {
         return fechaCita;
     }
 
-    public Integer getIdFranjaHoraria() {
-        return idFranjaHoraria;
+    public String getFranjaHoraria() {
+        return franjaHoraria;
     }
 
-    public Integer getIdEspecialidad() {
-        return idEspecialidad;
+    public String getEspecialidad() {
+        return especialidad;
     }
 
-    public Integer getIdModalidadCita() {
-        return idModalidadCita;
+    public String getModalidadCita() {
+        return modalidadCita;
     }
 
     public String getIdPaciente() {
         return idPaciente;
     }
 
-    public String getIdMedico() {
-        return idMedico;
+    public String getMedico() {
+        return medico;
     }
 
-    public Integer getIdIps() {
-        return idIps;
+    public String getIps() {
+        return ips;
     }
 
     public String getIdChat() {
         return idChat;
+    }
+
+    public String getUrlIps() {
+        return urlIps;
     }
 
     @Override
@@ -82,25 +89,26 @@ public class CitaDTO {
         return "CitaDTO{" +
                 "idCita='" + idCita + '\'' +
                 ", fechaCita=" + fechaCita +
-                ", idFranjaHoraria=" + idFranjaHoraria +
-                ", idEspecialidad=" + idEspecialidad +
-                ", idModalidadCita=" + idModalidadCita +
+                ", franjaHoraria='" + franjaHoraria + '\'' +
+                ", especialidad='" + especialidad + '\'' +
+                ", modalidadCita='" + modalidadCita + '\'' +
                 ", idPaciente='" + idPaciente + '\'' +
-                ", idMedico='" + idMedico + '\'' +
-                ", idIps=" + idIps +
+                ", medico='" + medico + '\'' +
+                ", ips='" + ips + '\'' +
                 ", idChat='" + idChat + '\'' +
                 '}';
     }
 
     public static class Builder  {
+        public String urlIps;
         private  String idCita;
         private  LocalDate fechaCita;
-        private  Integer idFranjaHoraria;
-        private  Integer idEspecialidad;
-        private  Integer idModalidadCita;
+        private  String idFranjaHoraria;
+        private  String idEspecialidad;
+        private  String idModalidadCita;
         private  String idPaciente;
         private  String idMedico;
-        private  Integer idIps;
+        private  String idIps;
         private  String idChat;
 
         public CitaDTO.Builder IdCita(String idCita) {
@@ -113,17 +121,17 @@ public class CitaDTO {
             return this;
         }
 
-        public CitaDTO.Builder  IdFranjaHoraria(Integer idFranjaHoraria) {
+        public CitaDTO.Builder  FranjaHoraria(String idFranjaHoraria) {
             this.idFranjaHoraria = idFranjaHoraria;
               return this;
         }
 
-        public CitaDTO.Builder  IdEspecialidad(Integer idEspecialidad) {
+        public CitaDTO.Builder  Especialidad(String idEspecialidad) {
             this.idEspecialidad = idEspecialidad;
             return this;
         }
 
-        public CitaDTO.Builder  IdModalidadCita(Integer idModalidadCita) {
+        public CitaDTO.Builder  ModalidadCita(String idModalidadCita) {
             this.idModalidadCita = idModalidadCita;
             return this;
         }
@@ -133,13 +141,18 @@ public class CitaDTO {
             return this;
         }
 
-        public CitaDTO.Builder IdMedico(String idMedico) {
+        public CitaDTO.Builder Medico(String idMedico) {
             this.idMedico = idMedico;
             return this;
         }
 
-        public CitaDTO.Builder IdIps(Integer idIps) {
+        public CitaDTO.Builder Ips(String idIps) {
             this.idIps = idIps;
+            return this;
+        }
+
+        public CitaDTO.Builder urlIps(String urlIps) {
+            this.urlIps = urlIps;
             return this;
         }
 

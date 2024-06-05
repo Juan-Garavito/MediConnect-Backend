@@ -25,15 +25,22 @@ public class Ciudadano {
     private String correo;
     @NotBlank(message = "Necesitas ingresar una contraseña")
     private String password;
+    private String urlimagenperfil;
+
     @ManyToMany(mappedBy = "ciudadanos")
     private List<Rol> rol;
 
+    @OneToMany(mappedBy = "idMedico")
+    private List<DisponibilidadMedico> disponibilidadMedico;
+
+    @ManyToMany(mappedBy = "ciudadanos")
+    private List<Especialidad> especialidad ;
 
     public Ciudadano() {
 
     }
 
-    public Ciudadano(String numerodocumento, String nombres, String apellidos, Date fechanacimiento, Integer idgenero, Integer idtiposangre, String direccion, String numerocelular, String correo, String password) {
+    public Ciudadano(String numerodocumento, String nombres, String apellidos, Date fechanacimiento, Integer idgenero, Integer idtiposangre, String direccion, String numerocelular, String correo, String password, String urlimagenperfil) {
         this.numerodocumento = numerodocumento;
         this.nombres = nombres;
         this.apellidos = apellidos;
@@ -44,6 +51,7 @@ public class Ciudadano {
         this.numerocelular = numerocelular;
         this.correo = correo;
         this.password = password;
+        this.urlimagenperfil = urlimagenperfil;
     }
 
     public String getNumerodocumento() {
@@ -126,6 +134,14 @@ public class Ciudadano {
         this.password = password;
     }
 
+    public String getUrlimagenperfil() {
+        return urlimagenperfil;
+    }
+
+    public void setUrlimagenperfil(String urlimagenperfil) {
+        this.urlimagenperfil = urlimagenperfil;
+    }
+
     @Override
     public String toString() {
         return "Ciudadano{" +
@@ -139,6 +155,7 @@ public class Ciudadano {
                 ", numerocelular='" + numerocelular + '\'' +
                 ", correo='" + correo + '\'' +
                 ", password='" + password + '\'' +
+                ", urlimagenperfil='" + urlimagenperfil + '\'' +
                 '}';
     }
 }

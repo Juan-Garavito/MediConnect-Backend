@@ -60,6 +60,7 @@ public class Rol{
         return "Rol{" +
                 "idRol=" + idRol +
                 ", nameRol='" + nameRol + '\'' +
+                ", ciudadanos=" + ciudadanos +
                 '}';
     }
 }

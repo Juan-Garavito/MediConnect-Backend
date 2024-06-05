@@ -38,4 +38,12 @@ public class Chat {
     public void setIdCita(String idCita) {
         this.idCita = idCita;
     }
+
+    @Override
+    public String toString() {
+        return "Chat{" +
+                "idChat='" + idChat + '\'' +
+                ", idCita='" + idCita + '\'' +
+                '}';
+    }
 }

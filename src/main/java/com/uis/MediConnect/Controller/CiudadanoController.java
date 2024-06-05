@@ -1,6 +1,8 @@
 package com.uis.MediConnect.Controller;
 
 
+import com.uis.MediConnect.DTO.CiudadanoDTO;
+import com.uis.MediConnect.DTO.LoginDTO;
 import com.uis.MediConnect.Model.Ciudadano;
 import com.uis.MediConnect.Service.CiudadanoService;
 import jakarta.validation.Valid;
@@ -73,6 +75,14 @@ public class CiudadanoController {
         return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
 
+    @PostMapping("/login")
+    ResponseEntity<CiudadanoDTO> loginCiudadano(@Valid @RequestBody LoginDTO login){
+        CiudadanoDTO ciudadano = ciudadanoService.loginCiudadano(login.getContraseña(),login.getCorreo());
+        if(ciudadano != null){
+            return new ResponseEntity<>(ciudadano, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> respuestaErrorConLaPeticion(MethodArgumentNotValidException error){
