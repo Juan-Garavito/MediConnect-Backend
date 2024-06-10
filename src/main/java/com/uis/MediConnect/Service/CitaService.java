@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.awt.print.Pageable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -80,10 +81,14 @@ public class CitaService implements ICitaService {
         List<CitaDTO> citasDto = mapeadorCita.mapearCitaACitaDTO(citas);
         return citasDto;
     }
-<<<<<<< Updated upstream
-    
-    //Método para obtener las citas asociadas a un médico
+
     @Override
+    public List<CitaDTO> buscarCitaPorIdMedico(String idmedico) {
+        return null;
+    }
+
+    //Método para obtener las citas asociadas a un médico
+    /*@Override
     public List<CitaDTO> buscarCitaPorIdMedico(String idmedico) {
         List<Cita> citas =  citaRepository.findALLByIdMedico(idmedico);
         List<CitaDTO> citasDto = new ArrayList<>();
@@ -96,7 +101,7 @@ public class CitaService implements ICitaService {
                     idChat = chat.getIdChat();
                 }
                 CitaDTO citaDTO = new CitaDTO.Builder().IdCita(cita.getIdCita())
-                        .FechaCita(cita.getFechaCita()).IdModalidadCita(cita.getIdModalidadCita())
+                        .FechaCita(cita.getFechaCita()).ModalidadCita(cita.getIdModalidadCita())
                         .IdPaciente(cita.getIdPaciente()).IdEspecialidad(cita.getIdEspecialidad())
                         .IdFranjaHoraria(cita.getIdFranjaHoraria())
                         .IdIps(cita.getIdIps()).IdChat(idChat).
@@ -105,9 +110,7 @@ public class CitaService implements ICitaService {
             }
         }
         return citasDto;
-    }
-    
-=======
+    }*/
 
     @Override
     public List<CitaDTO> buscarCitaPorIdPacienteConLimite(String idPaciente, int maxLimit) {
@@ -117,6 +120,4 @@ public class CitaService implements ICitaService {
     }
 
 
-
->>>>>>> Stashed changes
 }

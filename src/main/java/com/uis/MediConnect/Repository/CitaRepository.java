@@ -13,14 +13,12 @@ import java.util.List;
 @Repository
 public interface CitaRepository extends JpaRepository<Cita, String> {
 
-<<<<<<< Updated upstream
     List<Cita> findAllByIdPaciente(String idpaciente);
     //Método para obtener las citas asociadas a un médico
     public List<Cita> findALLByIdMedico(String idmedico);
-=======
     List<Cita> findAllByIdPacienteOrderByFechaCita(String idpaciente);
 
     @Query( nativeQuery = true, value = "select * from cita where idpaciente = :idpaciente order by fechacita limit :maxLimit")
     List<Cita> findAllByIdPacienteOrderByFechaCitaConLimite(@Param("idpaciente") String idpaciente, @Param("maxLimit") int maxLimit);
->>>>>>> Stashed changes
+
 }

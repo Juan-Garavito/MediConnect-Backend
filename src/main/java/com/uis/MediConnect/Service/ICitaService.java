@@ -15,12 +15,8 @@ public interface ICitaService {
     Cita editarCita(Cita cita);
     Cita eliminarCita(String idCita);
     List<CitaDTO> buscarCitaPorIdPaciente(String idPaciente);
-<<<<<<< Updated upstream
-    
     //Método para obtener las citas asociadas a un médico
     public List<CitaDTO> buscarCitaPorIdMedico(String idmedico);
-=======
     List<CitaDTO> buscarCitaPorIdPacienteConLimite(String idPaciente, int maxlimit);
 
->>>>>>> Stashed changes
 }
