@@ -5,6 +5,7 @@ import com.uis.MediConnect.Model.Cita;
 import net.sf.jsqlparser.statement.select.Limit;
 
 import java.awt.print.Pageable;
+import java.time.LocalDate;
 import java.util.List;
 
 public interface ICitaService {
@@ -18,5 +19,6 @@ public interface ICitaService {
     //Método para obtener las citas asociadas a un médico
     public List<CitaDTO> buscarCitaPorIdMedico(String idmedico);
     List<CitaDTO> buscarCitaPorIdPacienteConLimite(String idPaciente, int maxlimit);
+    List<CitaDTO> buscarCitaPorIdMedicoFecha(String Medico, LocalDate fechaCita);
 
 }

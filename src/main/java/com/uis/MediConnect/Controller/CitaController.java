@@ -191,5 +191,15 @@ public class CitaController {
         }
         return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
+    
+    @GetMapping("buscar/medico/{idMedico}/{fechaCita}")
+    ResponseEntity<List<CitaDTO>> buscarCitaPorIdMedicoFecha(@PathVariable String idMedico, @PathVariable LocalDate fechaCita) {
+        List<CitaDTO> citas = citaService.buscarCitaPorIdMedicoFecha(idMedico, fechaCita);
+        if(!citas.isEmpty()){
+            return new ResponseEntity<>(citas, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+    }
+
 
 }

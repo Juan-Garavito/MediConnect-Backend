@@ -4,12 +4,15 @@ import com.uis.MediConnect.Config.Mapeador.MapeadorCita;
 import com.uis.MediConnect.DTO.CitaDTO;
 import com.uis.MediConnect.Model.*;
 import com.uis.MediConnect.Repository.*;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.awt.print.Pageable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +24,9 @@ public class CitaService implements ICitaService {
     private final ChatRepository chatRepository;
     private final MensajeRepository mensajeRepository;
     private final MapeadorCita mapeadorCita;
+    
+    @PersistenceContext
+    EntityManager entityManager;
 
     @Autowired
     public CitaService(CitaRepository citaRepository, ChatRepository chatRepository, FranjaHorariaRepository franjaHorariaRepository, EspecialidadRepository especialidadRepository, IpsRepository ipsRepository, ModalidadCitaRepository modalidadCitaRepository, CiudadanoRepository ciudadanoRepository, MensajeRepository mensajeRepository, MapeadorCita mapeadorCita) {
@@ -74,7 +80,6 @@ public class CitaService implements ICitaService {
         return null;
     }
 
-    //Método para obtener las citas asociadas a un paciente
     @Override
     public List<CitaDTO> buscarCitaPorIdPaciente(String idPaciente) {
         List<Cita> citas =  citaRepository.findAllByIdPacienteOrderByFechaCita(idPaciente);
@@ -83,41 +88,18 @@ public class CitaService implements ICitaService {
     }
 
     @Override
-    public List<CitaDTO> buscarCitaPorIdMedico(String idmedico) {
-        return null;
-    }
-
-    //Método para obtener las citas asociadas a un médico
-    /*@Override
-    public List<CitaDTO> buscarCitaPorIdMedico(String idmedico) {
-        List<Cita> citas =  citaRepository.findALLByIdMedico(idmedico);
-        List<CitaDTO> citasDto = new ArrayList<>();
-        if(!citas.isEmpty()) {
-            String idChat;
-            for (Cita cita : citas) {
-                Chat chat = chatRepository.findByIdCita(cita.getIdCita());
-                idChat = null;
-                if (chat != null) {
-                    idChat = chat.getIdChat();
-                }
-                CitaDTO citaDTO = new CitaDTO.Builder().IdCita(cita.getIdCita())
-                        .FechaCita(cita.getFechaCita()).ModalidadCita(cita.getIdModalidadCita())
-                        .IdPaciente(cita.getIdPaciente()).IdEspecialidad(cita.getIdEspecialidad())
-                        .IdFranjaHoraria(cita.getIdFranjaHoraria())
-                        .IdIps(cita.getIdIps()).IdChat(idChat).
-                        IdMedico(cita.getIdMedico()).build();
-                citasDto.add(citaDTO);
-            }
-        }
-        return citasDto;
-    }*/
-
-    @Override
     public List<CitaDTO> buscarCitaPorIdPacienteConLimite(String idPaciente, int maxLimit) {
         List<Cita> citas = citaRepository.findAllByIdPacienteOrderByFechaCitaConLimite(idPaciente, maxLimit);
         List<CitaDTO> citasDto = mapeadorCita.mapearCitaACitaDTO(citas);
         return citasDto;
     }
 
-
+    @Override
+    public List<CitaDTO> buscarCitaPorIdMedicoFecha(String idMedico, LocalDate fechaCita) {
+    String query = "FROM Cita WHERE idMedico = :idmedico AND fechaCita = :fechacita";
+    return entityManager.createQuery(query)
+        .setParameter("idmedico", idMedico)
+        .setParameter("fechacita", fechaCita)
+        .getResultList();
+    }
 }
