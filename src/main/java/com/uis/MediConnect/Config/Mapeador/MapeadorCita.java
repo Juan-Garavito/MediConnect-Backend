@@ -60,4 +60,41 @@ public class MapeadorCita implements IMapeadorCita {
 
         return null;
     }
+    
+    
+    @Override
+    public List<CitaDTO> mapearCitaACitaDTOMedico(List<Cita> citas) {
+        List<CitaDTO> citasDto = new ArrayList<>();
+        if(!citas.isEmpty()) {
+            String idChat;
+            for (Cita cita : citas) {
+                Chat chat = chatRepository.findByIdCita(cita.getIdCita());
+                Especialidad especialidad = especialidadRepository.findById(cita.getIdEspecialidad()).orElse(null);
+                FranjaHoraria franjaHoraria = franjaHorariaRepository.findById(cita.getIdFranjaHoraria()).orElse(null);
+                Ips ips = ipsRepository.findById(cita.getIdIps()).orElse(null);
+                ModalidadCita modalidadCita = modalidadCitaRepository.findById(cita.getIdModalidadCita()).orElse(null);
+                Ciudadano paciente = ciudadanoRepository.findById(cita.getIdPaciente()).orElse(null);        ;
+                idChat = null;
+                if (chat != null) {
+                    idChat = chat.getIdChat();
+                }
+                CitaDTO citaDTO = new CitaDTO.Builder()
+                        .IdCita(cita.getIdCita())
+                        .Especialidad(especialidad.getDescripcion())
+                        .FranjaHoraria(franjaHoraria.getDescripcion())
+                        .Ips(ips.getDescripcion())
+                        .urlIps(ips.getUrl())
+                        .ModalidadCita(modalidadCita.getDescripcion())
+                        .FechaCita(cita.getFechaCita())
+                        .IdPaciente(paciente.getNombres())
+                        .Medico(cita.getIdMedico())
+                        .IdChat(idChat)
+                        .build();
+                citasDto.add(citaDTO);
+            }
+
+            return citasDto;
+        }
+        return null;
+    }    
 }

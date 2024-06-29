@@ -44,6 +44,46 @@ public class CitaDTO {
         this.urlIps = builder.urlIps;
     }
 
+    public void setIdCita(String idCita) {
+        this.idCita = idCita;
+    }
+
+    public void setFechaCita(LocalDate fechaCita) {
+        this.fechaCita = fechaCita;
+    }
+
+    public void setFranjaHoraria(String franjaHoraria) {
+        this.franjaHoraria = franjaHoraria;
+    }
+
+    public void setEspecialidad(String especialidad) {
+        this.especialidad = especialidad;
+    }
+
+    public void setModalidadCita(String modalidadCita) {
+        this.modalidadCita = modalidadCita;
+    }
+
+    public void setIdPaciente(String idPaciente) {
+        this.idPaciente = idPaciente;
+    }
+
+    public void setMedico(String medico) {
+        this.medico = medico;
+    }
+
+    public void setIps(String ips) {
+        this.ips = ips;
+    }
+
+    public void setUrlIps(String urlIps) {
+        this.urlIps = urlIps;
+    }
+
+    public void setIdChat(String idChat) {
+        this.idChat = idChat;
+    }
+    
     public String getIdCita() {
         return idCita;
     }
@@ -83,6 +123,8 @@ public class CitaDTO {
     public String getUrlIps() {
         return urlIps;
     }
+    
+    
 
     @Override
     public String toString() {

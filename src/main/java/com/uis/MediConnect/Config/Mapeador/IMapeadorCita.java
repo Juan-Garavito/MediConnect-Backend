@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface IMapeadorCita {
     List<CitaDTO> mapearCitaACitaDTO(List<Cita> citas);
+    List<CitaDTO> mapearCitaACitaDTOMedico(List<Cita> citas);
 }

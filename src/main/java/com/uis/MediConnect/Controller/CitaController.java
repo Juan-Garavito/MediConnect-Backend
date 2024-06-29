@@ -96,17 +96,6 @@ public class CitaController {
         return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
-    
-    //Solicitud para obtener las citas asociadas a un médico
-    @GetMapping("/buscar/medico/{idmedico}")
-    ResponseEntity<List<CitaDTO>> buscarCitaPorIdMedico(@PathVariable String idmedico) {
-        List<CitaDTO> citas = citaService.buscarCitaPorIdMedico(idmedico);
-        if(!citas.isEmpty()){
-            return new ResponseEntity<>(citas, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-    }
-
     @GetMapping("/buscar/paciente/{idPaciente}/{maxLimit}")
     ResponseEntity<List<CitaDTO>> buscarCitaPorIdPacienteConLimite(@PathVariable String idPaciente, @PathVariable int maxLimit){
         List<CitaDTO> citas = citaService.buscarCitaPorIdPacienteConLimite(idPaciente, maxLimit);

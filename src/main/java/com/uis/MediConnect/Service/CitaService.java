@@ -6,6 +6,7 @@ import com.uis.MediConnect.Model.*;
 import com.uis.MediConnect.Repository.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -13,12 +14,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.awt.print.Pageable;
 import java.time.LocalDate;
-<<<<<<< Updated upstream
-=======
 import java.time.ZoneId;
->>>>>>> Stashed changes
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @Transactional
@@ -28,13 +27,13 @@ public class CitaService implements ICitaService {
     private final ChatRepository chatRepository;
     private final MensajeRepository mensajeRepository;
     private final MapeadorCita mapeadorCita;
-<<<<<<< Updated upstream
+
     
     @PersistenceContext
     EntityManager entityManager;
-=======
+
     private final DisponibilidadMedicoRepository disponibilidadMedicoRepository;
->>>>>>> Stashed changes
+
 
     @Autowired
     public CitaService(CitaRepository citaRepository, ChatRepository chatRepository, FranjaHorariaRepository franjaHorariaRepository, EspecialidadRepository especialidadRepository, IpsRepository ipsRepository, ModalidadCitaRepository modalidadCitaRepository, CiudadanoRepository ciudadanoRepository, MensajeRepository mensajeRepository, MapeadorCita mapeadorCita, DisponibilidadMedicoRepository disponibilidadMedicoRepository) {
@@ -133,10 +132,17 @@ public class CitaService implements ICitaService {
 
     @Override
     public List<CitaDTO> buscarCitaPorIdMedicoFecha(String idMedico, LocalDate fechaCita) {
-    String query = "FROM Cita WHERE idMedico = :idmedico AND fechaCita = :fechacita";
-    return entityManager.createQuery(query)
-        .setParameter("idmedico", idMedico)
-        .setParameter("fechacita", fechaCita)
-        .getResultList();
+        String query = "SELECT c FROM Cita c WHERE c.idMedico = :idmedico AND c.fechaCita = :fechacita";
+
+        TypedQuery<Cita> typedQuery = entityManager.createQuery(query, Cita.class)
+                .setParameter("idmedico", idMedico)
+                .setParameter("fechacita", fechaCita);
+
+        List<Cita> citas = typedQuery.getResultList();
+
+        List<CitaDTO> citasDto = mapeadorCita.mapearCitaACitaDTOMedico(citas);
+
+        return citasDto;
     }
+
 }
