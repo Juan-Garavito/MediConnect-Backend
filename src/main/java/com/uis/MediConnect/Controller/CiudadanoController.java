@@ -1,6 +1,7 @@
 package com.uis.MediConnect.Controller;
 
 
+import com.google.common.hash.Hashing;
 import com.uis.MediConnect.DTO.CiudadanoDTO;
 import com.uis.MediConnect.DTO.LoginDTO;
 import com.uis.MediConnect.Model.Ciudadano;
@@ -13,6 +14,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 
@@ -33,11 +35,12 @@ public class CiudadanoController {
     ResponseEntity<Ciudadano> guardarCiudadano(@Valid @RequestBody Ciudadano ciudadano){
         Ciudadano ciudadanoPrueba = ciudadanoService.buscarCiudadano(ciudadano.getNumerodocumento());
         if(ciudadano != null && ciudadanoPrueba == null){
+
             ciudadanoService.guardarCiudadano(ciudadano);
             return new ResponseEntity<>(ciudadano, HttpStatus.CREATED);
         }
 
-        return new ResponseEntity<>(ciudadano, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(ciudadano, HttpStatus.NOT_FOUND );
     }
 
     @GetMapping("/buscar/{idCiudadano}")
@@ -47,7 +50,7 @@ public class CiudadanoController {
             return new ResponseEntity<>(ciudadano, HttpStatus.OK);
         }
 
-        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
     @GetMapping("/buscar")
@@ -62,7 +65,7 @@ public class CiudadanoController {
            return new ResponseEntity<>(ciudadano, HttpStatus.CREATED);
        }
 
-       return new ResponseEntity<>(ciudadano, HttpStatus.BAD_REQUEST);
+       return new ResponseEntity<>(ciudadano, HttpStatus.NOT_FOUND);
     }
 
     @DeleteMapping("/eliminar/{idCiudadano}")
@@ -72,7 +75,7 @@ public class CiudadanoController {
             return new ResponseEntity<>(ciudadano, HttpStatus.OK);
         }
 
-        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
     @PostMapping("/login")
@@ -81,7 +84,7 @@ public class CiudadanoController {
         if(ciudadano != null){
             return new ResponseEntity<>(ciudadano, HttpStatus.OK);
         }
-        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -92,6 +95,6 @@ public class CiudadanoController {
             String celda = ((FieldError) e).getField();
             response.put(celda, mensajeError);
         });
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 }

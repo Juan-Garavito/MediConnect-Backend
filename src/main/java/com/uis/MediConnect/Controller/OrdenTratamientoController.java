@@ -28,7 +28,7 @@ public class OrdenTratamientoController {
             ordenTratamientoService.guardarOrdenTratamiento(orden);
             return new ResponseEntity<>(orden, HttpStatus.CREATED);
         }
-        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
     @GetMapping("/buscar/{idOrden}")
@@ -37,7 +37,7 @@ public class OrdenTratamientoController {
         if(orden != null){
             return new ResponseEntity<>(orden, HttpStatus.OK);
         }
-        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
     @GetMapping("/buscar")
@@ -52,7 +52,7 @@ public class OrdenTratamientoController {
         if (ordenEditada != null){
             return new ResponseEntity<>(ordenEditada, HttpStatus.CREATED);
         }
-        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
     @DeleteMapping("/eliminar/{idOrden}")
@@ -61,6 +61,6 @@ public class OrdenTratamientoController {
         if (orden != null){
             return new ResponseEntity<>(orden, HttpStatus.OK);
         }
-        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 }

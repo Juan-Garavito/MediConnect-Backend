@@ -15,6 +15,10 @@ public interface DisponibilidadMedicoRepository extends JpaRepository<Disponibil
     List<DisponibilidadMedico> findAllByFechaAndEstado(@Param("fecha") LocalDate fecha, @Param("estado")  boolean estado);
 
     @Query(nativeQuery = true,
-            value = "select * from disponibilidadmedico where idmedico = :idmedico")
-    List<DisponibilidadMedico> findAllByIdMedico(@Param("idmedico") String idmedico);
+            value = "select * from disponibilidadmedico where idmedico = :idmedico and estado = :estado")
+    List<DisponibilidadMedico> findAllByIdMedicoAndEstado(@Param("idmedico") String idmedico, @Param("estado")  boolean estado);
+
+    @Query(nativeQuery = true,
+            value = "select * from disponibilidadmedico where idmedico = :idmedico and fecha = :fecha and estado = :estado")
+    List<DisponibilidadMedico> findAllByIdMedicoAnFechaWithEstado(@Param("idmedico") String idmedico, @Param("fecha") LocalDate fecha, @Param("estado")  boolean estado);
  }

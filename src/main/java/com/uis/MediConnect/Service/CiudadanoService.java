@@ -1,5 +1,6 @@
 package com.uis.MediConnect.Service;
 
+import com.google.common.hash.Hashing;
 import com.uis.MediConnect.DTO.CiudadanoDTO;
 import com.uis.MediConnect.Model.Ciudadano;
 import com.uis.MediConnect.Model.Rol;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,6 +30,8 @@ public class CiudadanoService implements ICiudadanoService{
 
     @Override
     public Ciudadano guardarCiudadano(Ciudadano ciudadano) {
+        String contraseñaEncryptada = Hashing.sha256().hashString(ciudadano.getPassword(), StandardCharsets.UTF_8).toString();
+        ciudadano.setPassword(contraseñaEncryptada);
         return ciudadanoRepository.save(ciudadano);
     }
 
@@ -62,22 +66,25 @@ public class CiudadanoService implements ICiudadanoService{
 
     @Override
     public CiudadanoDTO loginCiudadano(String contraseña, String correo) {
-        Ciudadano ciudadano = ciudadanoRepository.findByCorreoAndPassword(correo, contraseña);
+        Ciudadano ciudadano = ciudadanoRepository.findByCorreo(correo);
         if(ciudadano != null){
-            List<Rol> rolLista = rolRepository.findAll();
-            int i;
-            for(i=0; i<rolLista.size();i++){
-                if(rolLista.get(i).getCiudadanos().contains(ciudadano)){
-                    break;
-                };
+            String contraseñaEncryptada = Hashing.sha256().hashString(contraseña,StandardCharsets.UTF_8).toString();
+            if(ciudadano.getPassword().equals(contraseñaEncryptada)){
+                List<Rol> rolLista = rolRepository.findAll();
+                System.out.println(rolLista.toString());
+                    int i;
+                    for(i=0; i<rolLista.size();i++){
+                        if(rolLista.get(i).getCiudadanos().contains(ciudadano)){
+                            break;
+                        };
+                    }
+                    CiudadanoDTO ciudadanoDTO = new CiudadanoDTO(ciudadano.getNumerodocumento(),
+                            ciudadano.getNombres(),
+                            ciudadano.getApellidos(),
+                            ciudadano.getUrlimagenperfil(),
+                            rolLista.get(i).getIdRol());
+                    return ciudadanoDTO;
             }
-            CiudadanoDTO ciudadanoDTO = new CiudadanoDTO(ciudadano.getNumerodocumento(),
-                    ciudadano.getNombres(),
-                    ciudadano.getApellidos(),
-                    ciudadano.getUrlimagenperfil(),
-                    rolLista.get(i).getIdRol());
-            System.out.println(ciudadanoDTO.toString());
-            return ciudadanoDTO;
 
         }
         return null;                                        

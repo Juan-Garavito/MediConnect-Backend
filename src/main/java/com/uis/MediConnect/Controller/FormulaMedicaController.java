@@ -30,7 +30,7 @@ public class FormulaMedicaController {
             formulaMedicaService.guardarFormulaMedica(formula);
             return new ResponseEntity<>(formula, HttpStatus.CREATED);
         }
-        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
     @GetMapping("/buscar/{idFormula}")
@@ -40,7 +40,7 @@ public class FormulaMedicaController {
             return new ResponseEntity<>(formulaMedica, HttpStatus.OK);
         }
 
-        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
     @GetMapping("/buscar")
@@ -55,7 +55,7 @@ public class FormulaMedicaController {
             return new ResponseEntity<>(formulaMedica, HttpStatus.CREATED);
         }
 
-        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
     @DeleteMapping("/eliminar/{idFormula}")
@@ -65,6 +65,6 @@ public class FormulaMedicaController {
             return new ResponseEntity<>(formulaMedica, HttpStatus.OK);
         }
 
-        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 }

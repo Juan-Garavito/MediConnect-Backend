@@ -7,7 +7,6 @@ public class CiudadanoDTO {
     private String nombres;
     private String apellidos;
     private String url;
-
     private Integer idRol;
 
 

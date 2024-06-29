@@ -47,7 +47,7 @@ public class CitaController {
             citaService.guardarCita(cita);
             return new ResponseEntity<>(cita, HttpStatus.CREATED);
         }
-        return  new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        return  new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
     @GetMapping("/buscar/{idCita}")
@@ -57,7 +57,7 @@ public class CitaController {
         if(cita != null){
             return new ResponseEntity<>(cita, HttpStatus.OK);
         }
-        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
     @GetMapping("/buscar")
@@ -71,7 +71,7 @@ public class CitaController {
         if(citaEditada != null ){
             return new ResponseEntity<>(citaEditada, HttpStatus.CREATED);
         }
-        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
     @DeleteMapping("/eliminar/{idCita}")
@@ -81,7 +81,7 @@ public class CitaController {
         if(cita != null){
             return new ResponseEntity<>(cita, HttpStatus.OK);
         }
-        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
     //Solicitud para obtener las citas asociadas a un paciente
@@ -90,10 +90,10 @@ public class CitaController {
     ResponseEntity<List<CitaDTO>> buscarCitaPorIdPaciente(@PathVariable String idPaciente){
         List<CitaDTO> citas = citaService.buscarCitaPorIdPaciente(idPaciente);
 
-        if(!citas.isEmpty()){
+        if(citas != null){
             return new ResponseEntity<>(citas, HttpStatus.OK);
         }
-        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
     
@@ -104,22 +104,22 @@ public class CitaController {
         if(!citas.isEmpty()){
             return new ResponseEntity<>(citas, HttpStatus.OK);
         }
-        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
     @GetMapping("/buscar/paciente/{idPaciente}/{maxLimit}")
     ResponseEntity<List<CitaDTO>> buscarCitaPorIdPacienteConLimite(@PathVariable String idPaciente, @PathVariable int maxLimit){
         List<CitaDTO> citas = citaService.buscarCitaPorIdPacienteConLimite(idPaciente, maxLimit);
 
-
-        if(!citas.isEmpty()){
+        System.out.println(citas);
+        if(citas != null){
             return new ResponseEntity<>(citas, HttpStatus.OK);
         }
-        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
     @GetMapping("/buscar/medicos/{fecha}/{idEspecialidad}")
-    ResponseEntity<List<Ciudadano>> buscarDisponibilidadMedicoPorFecha(@PathVariable LocalDate fecha, @PathVariable Integer idEspecialidad){
+    ResponseEntity<List<Ciudadano>> buscarDisponibilidadMedicoPorFechayEspecialidad(@PathVariable LocalDate fecha, @PathVariable Integer idEspecialidad){
         List<DisponibilidadMedico> disponibilidadMedicos = disponibilidadMedicoRepository.findAllByFechaAndEstado(fecha, false);
         Especialidad especialidad = especialidadRepository.findById(idEspecialidad).orElse(null);
         List<Ciudadano> especialidadCiudadanos = especialidad.getCiudadanos();
@@ -142,23 +142,26 @@ public class CitaController {
         if(!medicos.isEmpty()){
             return new ResponseEntity<>(medicos, HttpStatus.OK);
         }
-        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping("/buscar/medicos/franjahoraria/{idMedico}")
-    ResponseEntity<List<FranjaHoraria>> buscarFranjaHorariaPorIdMedico(@PathVariable String idMedico){
-        List<DisponibilidadMedico> disponibilidadMedicos = disponibilidadMedicoRepository.findAllByIdMedico(idMedico);
+    @GetMapping("/buscar/franjahoraria/{fecha}/{idMedico}")
+    ResponseEntity<List<FranjaHoraria>> buscarFranjaHorariaPorIdMedicoYFecha(@PathVariable String idMedico, @PathVariable LocalDate fecha){
+        List<DisponibilidadMedico> disponibilidadMedicos = disponibilidadMedicoRepository.findAllByIdMedicoAndEstado(idMedico, false);
         List<FranjaHoraria> franjaHorariasMedico = new ArrayList<>();
-
+        System.out.println(fecha);
         for(DisponibilidadMedico disponibilidadMedico : disponibilidadMedicos){
-            franjaHorariasMedico.add(disponibilidadMedico.getIdFranjaHoraria());
-        }
+            if(disponibilidadMedico.getFecha().equals(fecha)){
+                franjaHorariasMedico.add(disponibilidadMedico.getIdFranjaHoraria());
+            }
 
-        System.out.println("franja horaria");
+        }
+        System.out.println("franja horaria " + disponibilidadMedicos.toString());
+        System.out.println("franja horaria " + franjaHorariasMedico.toString());
         if(!disponibilidadMedicos.isEmpty()){
             return new ResponseEntity<>(franjaHorariasMedico, HttpStatus.OK);
         }
-        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
     @GetMapping("/buscar/modalidadcita")
@@ -169,7 +172,7 @@ public class CitaController {
         if(!modalidadesCitas.isEmpty()){
             return new ResponseEntity<>(modalidadesCitas, HttpStatus.OK);
         }
-        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
     @GetMapping("/buscar/especialidades")
@@ -179,7 +182,7 @@ public class CitaController {
         if(!especialidades.isEmpty()){
             return new ResponseEntity<>(especialidades, HttpStatus.OK);
         }
-        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
     @GetMapping("/buscar/listIps")
@@ -189,7 +192,7 @@ public class CitaController {
         if(!listIps.isEmpty()){
             return new ResponseEntity<>(listIps, HttpStatus.OK);
         }
-        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
     
     @GetMapping("buscar/medico/{idMedico}/{fechaCita}")

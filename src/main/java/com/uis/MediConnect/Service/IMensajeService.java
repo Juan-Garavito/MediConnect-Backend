@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface IMensajeService {
     Mensaje guardarMensaje(Mensaje mensaje);
-    List<Mensaje> obtenerMensajesPorIdChat(String idchat);
+    List<Mensaje> obtenerMensajesPorIdChat(String idchat, int pagina);
 }

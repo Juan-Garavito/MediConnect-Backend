@@ -3,6 +3,9 @@ package com.uis.MediConnect.Controller;
 import com.uis.MediConnect.Model.Mensaje;
 import com.uis.MediConnect.Service.MensajeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -33,11 +36,17 @@ public class ChatController {
         System.out.println("Mensaje: " + mensaje);
     }
 
-    @GetMapping("/chat/{idChat}")
-    public List<Mensaje> obtenerMensjaesPorChatId(@PathVariable String idChat){
-        List<Mensaje> mensajes =  mensajeService.obtenerMensajesPorIdChat(idChat);
+    @GetMapping("/chat/{idChat}/{pagina}")
+    public ResponseEntity<List<Mensaje>> obtenerMensjaesPorChatId(@PathVariable String idChat, @PathVariable  int pagina){
+        System.out.println("Llego: "+ idChat + " " + pagina);
+        List<Mensaje> mensajes =  mensajeService.obtenerMensajesPorIdChat(idChat,pagina);
         System.out.println("Llego: "+ mensajes.toString());
-        return mensajes;
+
+        if(!mensajes.isEmpty()){
+            return new ResponseEntity<>(mensajes, HttpStatus.OK);
+        }
+        System.out.println("Llego: "+ "vacio");
+         return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
 }

@@ -13,6 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.awt.print.Pageable;
 import java.time.LocalDate;
+<<<<<<< Updated upstream
+=======
+import java.time.ZoneId;
+>>>>>>> Stashed changes
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,21 +28,37 @@ public class CitaService implements ICitaService {
     private final ChatRepository chatRepository;
     private final MensajeRepository mensajeRepository;
     private final MapeadorCita mapeadorCita;
+<<<<<<< Updated upstream
     
     @PersistenceContext
     EntityManager entityManager;
+=======
+    private final DisponibilidadMedicoRepository disponibilidadMedicoRepository;
+>>>>>>> Stashed changes
 
     @Autowired
-    public CitaService(CitaRepository citaRepository, ChatRepository chatRepository, FranjaHorariaRepository franjaHorariaRepository, EspecialidadRepository especialidadRepository, IpsRepository ipsRepository, ModalidadCitaRepository modalidadCitaRepository, CiudadanoRepository ciudadanoRepository, MensajeRepository mensajeRepository, MapeadorCita mapeadorCita) {
+    public CitaService(CitaRepository citaRepository, ChatRepository chatRepository, FranjaHorariaRepository franjaHorariaRepository, EspecialidadRepository especialidadRepository, IpsRepository ipsRepository, ModalidadCitaRepository modalidadCitaRepository, CiudadanoRepository ciudadanoRepository, MensajeRepository mensajeRepository, MapeadorCita mapeadorCita, DisponibilidadMedicoRepository disponibilidadMedicoRepository) {
         this.citaRepository = citaRepository;
         this.chatRepository = chatRepository;
         this.mensajeRepository = mensajeRepository;
         this.mapeadorCita = mapeadorCita;
+        this.disponibilidadMedicoRepository = disponibilidadMedicoRepository;
     }
 
 
     @Override
     public Cita guardarCita(Cita cita) {
+        List<DisponibilidadMedico> disponibilidadMedicos = disponibilidadMedicoRepository.findAllByIdMedicoAnFechaWithEstado(cita.getIdMedico(), cita.getFechaCita(), false);
+
+        for(DisponibilidadMedico disponibilidadMedico : disponibilidadMedicos){
+            if(disponibilidadMedico.getIdFranjaHoraria().getId() == cita.getIdFranjaHoraria()){
+                System.out.println(disponibilidadMedico.getIdFranjaHoraria().toString());
+                disponibilidadMedico.setEstado(true);
+                disponibilidadMedicoRepository.save(disponibilidadMedico);
+                break;
+            }
+        }
+
         return citaRepository.save(cita);
     }
 
@@ -55,6 +75,16 @@ public class CitaService implements ICitaService {
     @Override
     public Cita editarCita(Cita cita) {
         Cita oldCita = buscarCita(cita.getIdCita());
+
+        List<DisponibilidadMedico> disponibilidadMedicos = disponibilidadMedicoRepository.findAllByIdMedicoAnFechaWithEstado(oldCita.getIdMedico(), oldCita.getFechaCita(), true);
+        for(DisponibilidadMedico disponibilidadMedico : disponibilidadMedicos){
+            if(disponibilidadMedico.getIdFranjaHoraria().getId() == oldCita.getIdFranjaHoraria()){
+                disponibilidadMedico.setEstado(false);
+                disponibilidadMedicoRepository.save(disponibilidadMedico);
+                break;
+            }
+        }
+
         if(oldCita != null){
             return guardarCita(cita);
         }
@@ -67,13 +97,17 @@ public class CitaService implements ICitaService {
 
         if(cita != null){
             System.out.println("Cita IPS: "+ cita.getIdIps());
+
             if(cita.getIdIps().equals(10)){
                 Chat chat = chatRepository.findByIdCita(cita.getIdCita());
-                List<Mensaje> mensajes = mensajeRepository.findAllByIdChatOrderByFechaMensaje(chat.getIdChat());
-                mensajeRepository.deleteAll(mensajes);
-                chatRepository.delete(chat);
-                System.out.println("Cita Chat: " + chat.toString());
+                if(chat != null){
+                    List<Mensaje> mensajes = mensajeRepository.findAllByIdChat(chat.getIdChat());
+                    mensajeRepository.deleteAll(mensajes);
+                    chatRepository.delete(chat);
+                    System.out.println("Cita Chat: " + chat.toString());
+                }
             }
+
             citaRepository.deleteById(idCita);
             return cita;
         }
@@ -82,14 +116,17 @@ public class CitaService implements ICitaService {
 
     @Override
     public List<CitaDTO> buscarCitaPorIdPaciente(String idPaciente) {
-        List<Cita> citas =  citaRepository.findAllByIdPacienteOrderByFechaCita(idPaciente);
+        LocalDate dateNow = LocalDate.now(ZoneId.of("America/Bogota"));
+        System.out.println(dateNow.toString());
+        List<Cita> citas =  citaRepository.findAllByIdPacienteOrderByFechaCitaAhora(idPaciente, dateNow);
         List<CitaDTO> citasDto = mapeadorCita.mapearCitaACitaDTO(citas);
         return citasDto;
     }
 
     @Override
     public List<CitaDTO> buscarCitaPorIdPacienteConLimite(String idPaciente, int maxLimit) {
-        List<Cita> citas = citaRepository.findAllByIdPacienteOrderByFechaCitaConLimite(idPaciente, maxLimit);
+        LocalDate dateNow = LocalDate.now(ZoneId.of("America/Bogota"));
+        List<Cita> citas = citaRepository.findAllByIdPacienteOrderByFechaCitaConLimiteAHora(idPaciente, maxLimit, dateNow);
         List<CitaDTO> citasDto = mapeadorCita.mapearCitaACitaDTO(citas);
         return citasDto;
     }

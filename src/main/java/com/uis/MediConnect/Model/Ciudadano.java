@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -16,7 +17,7 @@ public class Ciudadano {
     private String numerodocumento;
     private String nombres;
     private String apellidos;
-    private Date fechanacimiento;
+    private LocalDate fechanacimiento;
     private Integer idgenero;
     private Integer idtiposangre;
     private String direccion;
@@ -40,7 +41,7 @@ public class Ciudadano {
 
     }
 
-    public Ciudadano(String numerodocumento, String nombres, String apellidos, Date fechanacimiento, Integer idgenero, Integer idtiposangre, String direccion, String numerocelular, String correo, String password, String urlimagenperfil) {
+    public Ciudadano(String numerodocumento, String nombres, String apellidos, LocalDate fechanacimiento, Integer idgenero, Integer idtiposangre, String direccion, String numerocelular, String correo, String password, String urlimagenperfil) {
         this.numerodocumento = numerodocumento;
         this.nombres = nombres;
         this.apellidos = apellidos;
@@ -78,11 +79,11 @@ public class Ciudadano {
         this.apellidos = apellidos;
     }
 
-    public Date getFechanacimiento() {
+    public LocalDate getFechanacimiento() {
         return fechanacimiento;
     }
 
-    public void setFechanacimiento(Date fechanacimiento) {
+    public void setFechanacimiento(LocalDate fechanacimiento) {
         this.fechanacimiento = fechanacimiento;
     }
 

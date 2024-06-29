@@ -30,7 +30,7 @@ public class HistoriaClinicaController {
             historiaClinicaService.guardarHistoriaClinica(historia);
             return new ResponseEntity<>(historia, HttpStatus.CREATED);
         }
-        return  new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        return  new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
     @GetMapping("/buscar/{idHistoria}")
@@ -39,7 +39,7 @@ public class HistoriaClinicaController {
         if(historiaClinica != null){
             return new ResponseEntity<>(historiaClinica, HttpStatus.OK);
         }
-        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
     @GetMapping("/buscar")
@@ -53,7 +53,7 @@ public class HistoriaClinicaController {
         if(historiaClinica != null ){
             return new ResponseEntity<>(historiaClinica, HttpStatus.CREATED);
         }
-        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
     @DeleteMapping("/eliminar/{idHistoria}")
@@ -62,6 +62,6 @@ public class HistoriaClinicaController {
         if(historiaClinica != null){
             return new ResponseEntity<>(historiaClinica, HttpStatus.OK);
         }
-        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 }

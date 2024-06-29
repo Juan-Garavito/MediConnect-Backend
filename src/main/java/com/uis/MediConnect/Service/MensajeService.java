@@ -3,6 +3,8 @@ package com.uis.MediConnect.Service;
 import com.uis.MediConnect.Model.Mensaje;
 import com.uis.MediConnect.Repository.MensajeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,7 +28,8 @@ public class MensajeService implements IMensajeService{
     }
 
     @Override
-    public List<Mensaje> obtenerMensajesPorIdChat(String idchat) {
-        return mensajeRepository.findAllByIdChatOrderByFechaMensaje(idchat);
+    public List<Mensaje> obtenerMensajesPorIdChat(String idchat, int pagina){
+        Pageable pageable = PageRequest.of(pagina, 20);
+        return mensajeRepository.findAllByIdChatOrderByFechaMensajeDesc(idchat, pageable);
     }
 }
