@@ -4,7 +4,7 @@ import com.uis.MediConnect.Model.Chat;
 
 
 public interface IChatService {
-    void crearIdChat();
+    void crearIdChat(String idCita);
 
     void guardarChat(Chat Chat);
 

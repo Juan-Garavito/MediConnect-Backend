@@ -49,6 +49,8 @@ public class CiudadanoService implements ICiudadanoService{
     public Ciudadano editarCiudadano(Ciudadano ciudadano) {
         Ciudadano oldCiudadano = buscarCiudadano(ciudadano.getNumerodocumento());
         if(oldCiudadano != null){
+            String contraseñaEncryptada = Hashing.sha256().hashString(ciudadano.getPassword(), StandardCharsets.UTF_8).toString();
+            ciudadano.setPassword(contraseñaEncryptada);
             return guardarCiudadano(ciudadano);
         }
         return oldCiudadano;

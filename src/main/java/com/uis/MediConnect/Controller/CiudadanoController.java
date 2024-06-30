@@ -2,6 +2,7 @@ package com.uis.MediConnect.Controller;
 
 
 import com.google.common.hash.Hashing;
+import com.uis.MediConnect.Config.AESEncryption;
 import com.uis.MediConnect.DTO.CiudadanoDTO;
 import com.uis.MediConnect.DTO.LoginDTO;
 import com.uis.MediConnect.Model.Ciudadano;
@@ -25,10 +26,12 @@ public class CiudadanoController {
 
 
     private final CiudadanoService ciudadanoService;
+    private AESEncryption aesEncryption;
 
     @Autowired
-    public CiudadanoController(CiudadanoService ciudadanoService) {
+    public CiudadanoController(CiudadanoService ciudadanoService, AESEncryption aesEncryption) {
         this.ciudadanoService = ciudadanoService;
+        this.aesEncryption = aesEncryption;
     }
 
     @PostMapping("/ingresar")
@@ -79,7 +82,7 @@ public class CiudadanoController {
     }
 
     @PostMapping("/login")
-    ResponseEntity<CiudadanoDTO> loginCiudadano(@Valid @RequestBody LoginDTO login){
+    ResponseEntity<CiudadanoDTO> loginCiudadano(@Valid @RequestBody LoginDTO login) throws Exception {
         CiudadanoDTO ciudadano = ciudadanoService.loginCiudadano(login.getContraseña(),login.getCorreo());
         if(ciudadano != null){
             return new ResponseEntity<>(ciudadano, HttpStatus.OK);
@@ -97,4 +100,5 @@ public class CiudadanoController {
         });
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
+
 }

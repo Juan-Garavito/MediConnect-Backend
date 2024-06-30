@@ -8,16 +8,13 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.awt.print.Pageable;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+
 
 @Service
 @Transactional
@@ -27,20 +24,19 @@ public class CitaService implements ICitaService {
     private final ChatRepository chatRepository;
     private final MensajeRepository mensajeRepository;
     private final MapeadorCita mapeadorCita;
-
-    
     @PersistenceContext
     EntityManager entityManager;
-
     private final DisponibilidadMedicoRepository disponibilidadMedicoRepository;
+    private final ChatService chatService;
 
 
     @Autowired
-    public CitaService(CitaRepository citaRepository, ChatRepository chatRepository, FranjaHorariaRepository franjaHorariaRepository, EspecialidadRepository especialidadRepository, IpsRepository ipsRepository, ModalidadCitaRepository modalidadCitaRepository, CiudadanoRepository ciudadanoRepository, MensajeRepository mensajeRepository, MapeadorCita mapeadorCita, DisponibilidadMedicoRepository disponibilidadMedicoRepository) {
+    public CitaService(CitaRepository citaRepository, ChatRepository chatRepository, FranjaHorariaRepository franjaHorariaRepository, EspecialidadRepository especialidadRepository, IpsRepository ipsRepository, ModalidadCitaRepository modalidadCitaRepository, CiudadanoRepository ciudadanoRepository, MensajeRepository mensajeRepository, MapeadorCita mapeadorCita, ChatService chatService, DisponibilidadMedicoRepository disponibilidadMedicoRepository) {
         this.citaRepository = citaRepository;
         this.chatRepository = chatRepository;
         this.mensajeRepository = mensajeRepository;
         this.mapeadorCita = mapeadorCita;
+        this.chatService = chatService;
         this.disponibilidadMedicoRepository = disponibilidadMedicoRepository;
     }
 
@@ -51,14 +47,18 @@ public class CitaService implements ICitaService {
 
         for(DisponibilidadMedico disponibilidadMedico : disponibilidadMedicos){
             if(disponibilidadMedico.getIdFranjaHoraria().getId() == cita.getIdFranjaHoraria()){
-                System.out.println(disponibilidadMedico.getIdFranjaHoraria().toString());
                 disponibilidadMedico.setEstado(true);
                 disponibilidadMedicoRepository.save(disponibilidadMedico);
                 break;
             }
         }
 
-        return citaRepository.save(cita);
+        citaRepository.save(cita);
+        if(cita.getIdModalidadCita().equals(2)){
+            chatService.crearIdChat(cita.getIdCita());
+        }
+
+        return cita;
     }
 
     @Override
@@ -96,14 +96,13 @@ public class CitaService implements ICitaService {
 
         if(cita != null){
             System.out.println("Cita IPS: "+ cita.getIdIps());
-
+            System.out.println("Cita ID: "+ cita.getIdCita());
             if(cita.getIdIps().equals(10)){
                 Chat chat = chatRepository.findByIdCita(cita.getIdCita());
                 if(chat != null){
                     List<Mensaje> mensajes = mensajeRepository.findAllByIdChat(chat.getIdChat());
                     mensajeRepository.deleteAll(mensajes);
                     chatRepository.delete(chat);
-                    System.out.println("Cita Chat: " + chat.toString());
                 }
             }
 
@@ -116,10 +115,14 @@ public class CitaService implements ICitaService {
     @Override
     public List<CitaDTO> buscarCitaPorIdPaciente(String idPaciente) {
         LocalDate dateNow = LocalDate.now(ZoneId.of("America/Bogota"));
-        System.out.println(dateNow.toString());
         List<Cita> citas =  citaRepository.findAllByIdPacienteOrderByFechaCitaAhora(idPaciente, dateNow);
         List<CitaDTO> citasDto = mapeadorCita.mapearCitaACitaDTO(citas);
         return citasDto;
+    }
+
+    @Override
+    public List<CitaDTO> buscarCitaPorIdMedico(String idmedico) {
+        return null;
     }
 
     @Override

@@ -1,12 +1,10 @@
 package com.uis.MediConnect.Controller;
 
+import com.uis.MediConnect.Config.AESEncryption;
 import com.uis.MediConnect.Model.Mensaje;
 import com.uis.MediConnect.Service.MensajeService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.Message;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -25,29 +23,26 @@ public class ChatController {
 
     private final MensajeService mensajeService;
 
-    public ChatController(MensajeService mensajeService, SimpUserRegistry simpUserRegistry) {
-        this.mensajeService = mensajeService;
+    public ChatController(MensajeService mensajeService, SimpUserRegistry simpUserRegistry, AESEncryption aesEncryption, AESEncryption aesEncryption1) {
+        this.mensajeService = mensajeService;;
     }
 
     @MessageMapping("/{idchat}")
     @SendTo("/chat/{idchat}")
-    public void enviarMensaje(@Payload Mensaje mensaje) {
+    public void enviarMensaje(@Payload Mensaje mensaje)  {
+        System.out.println(mensaje);
         mensajeService.guardarMensaje(mensaje);
-        System.out.println("Mensaje: " + mensaje);
     }
 
     @GetMapping("/chat/{idChat}/{pagina}")
     public ResponseEntity<List<Mensaje>> obtenerMensjaesPorChatId(@PathVariable String idChat, @PathVariable  int pagina){
-        System.out.println("Llego: "+ idChat + " " + pagina);
         List<Mensaje> mensajes =  mensajeService.obtenerMensajesPorIdChat(idChat,pagina);
-        System.out.println("Llego: "+ mensajes.toString());
-
         if(!mensajes.isEmpty()){
             return new ResponseEntity<>(mensajes, HttpStatus.OK);
         }
-        System.out.println("Llego: "+ "vacio");
          return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
+
 
 }
 

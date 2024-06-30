@@ -19,17 +19,16 @@ import java.util.stream.Collectors;
 @EnableScheduling
 public class ChatService implements IChatService{
 
-    private final CitaRepository citaRepository;
+
     private final ChatRepository chatRepository;
 
     @Autowired
     public ChatService(CitaRepository citaRepository, ChatRepository chatRepository) {
-        this.citaRepository = citaRepository;
         this.chatRepository = chatRepository;
     }
 
 
-    @Scheduled(cron = "0 0 1 * * *", zone = "America/Bogota")
+    /*@Scheduled(cron = "0 0 1 * * *", zone = "America/Bogota")
     @Override
     public void crearIdChat() {
         List<Cita> citas = citaRepository.findAll();
@@ -46,6 +45,13 @@ public class ChatService implements IChatService{
         }
 
         System.out.println("Se ejecuto");
+    }*/
+
+    @Override
+    public void crearIdChat(String idCita) {
+        String idChat = UUID.randomUUID().toString().substring(0,10);
+        Chat nuevoChat = new Chat(idChat,idCita);
+        guardarChat(nuevoChat);
     }
 
     @Override
@@ -57,5 +63,6 @@ public class ChatService implements IChatService{
     public Chat obtenerChatPorIdCita(String idCita) {
         return chatRepository.findByIdCita(idCita);
     }
+
 
 }
