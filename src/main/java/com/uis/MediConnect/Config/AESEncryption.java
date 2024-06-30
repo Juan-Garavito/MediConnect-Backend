@@ -46,13 +46,10 @@ public class AESEncryption {
     public  String descifrar(String mensajeCifrado) throws Exception {
 
         byte[] cipherText = Base64.getDecoder().decode(mensajeCifrado);
-
         SecretKey secretKey = generarSecretKey();
-
         Cipher cipher = Cipher.getInstance("AES");
         cipher.init(Cipher.DECRYPT_MODE, secretKey);
-
         byte[] decryptedText = cipher.doFinal(cipherText);
-        return new String(decryptedText, "UTF-8");
+        return new String(decryptedText, StandardCharsets.UTF_8);
     }
 }

@@ -1,6 +1,7 @@
 package com.uis.MediConnect.Service;
 
 import com.google.common.hash.Hashing;
+import com.uis.MediConnect.Config.AESEncryption;
 import com.uis.MediConnect.DTO.CiudadanoDTO;
 import com.uis.MediConnect.Model.Ciudadano;
 import com.uis.MediConnect.Model.Rol;
@@ -12,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Optional;
+
 
 @Service
 @Transactional
@@ -20,18 +21,26 @@ public class CiudadanoService implements ICiudadanoService{
 
     private final CiudadanoRepository ciudadanoRepository;
     private final RolRepository rolRepository;
+    private final AESEncryption aesEncryption;
 
     @Autowired
-    public CiudadanoService(CiudadanoRepository ciudadanoRepository, RolRepository rolRepository) {
+    public CiudadanoService(CiudadanoRepository ciudadanoRepository, RolRepository rolRepository, AESEncryption aesEncryption) {
         this.ciudadanoRepository = ciudadanoRepository;
         this.rolRepository = rolRepository;
+        this.aesEncryption = aesEncryption;
     }
 
 
     @Override
     public Ciudadano guardarCiudadano(Ciudadano ciudadano) {
-        String contraseñaEncryptada = Hashing.sha256().hashString(ciudadano.getPassword(), StandardCharsets.UTF_8).toString();
+        String contraseñaEncryptada = null;
+        try {
+            contraseñaEncryptada = aesEncryption.cifrar(ciudadano.getPassword());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         ciudadano.setPassword(contraseñaEncryptada);
+        System.out.println(contraseñaEncryptada);
         return ciudadanoRepository.save(ciudadano);
     }
 
@@ -49,8 +58,6 @@ public class CiudadanoService implements ICiudadanoService{
     public Ciudadano editarCiudadano(Ciudadano ciudadano) {
         Ciudadano oldCiudadano = buscarCiudadano(ciudadano.getNumerodocumento());
         if(oldCiudadano != null){
-            String contraseñaEncryptada = Hashing.sha256().hashString(ciudadano.getPassword(), StandardCharsets.UTF_8).toString();
-            ciudadano.setPassword(contraseñaEncryptada);
             return guardarCiudadano(ciudadano);
         }
         return oldCiudadano;
@@ -70,10 +77,17 @@ public class CiudadanoService implements ICiudadanoService{
     public CiudadanoDTO loginCiudadano(String contraseña, String correo) {
         Ciudadano ciudadano = ciudadanoRepository.findByCorreo(correo);
         if(ciudadano != null){
-            String contraseñaEncryptada = Hashing.sha256().hashString(contraseña,StandardCharsets.UTF_8).toString();
+            String contraseñaEncryptada = null ;
+            try {
+                contraseñaEncryptada = aesEncryption.cifrar(contraseña);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            System.out.println(contraseñaEncryptada);
+            System.out.println(ciudadano.getPassword());
             if(ciudadano.getPassword().equals(contraseñaEncryptada)){
                 List<Rol> rolLista = rolRepository.findAll();
-                System.out.println(rolLista.toString());
+
                     int i;
                     for(i=0; i<rolLista.size();i++){
                         if(rolLista.get(i).getCiudadanos().contains(ciudadano)){
