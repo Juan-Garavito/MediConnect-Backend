@@ -86,13 +86,12 @@ public class MapeadorCita implements IMapeadorCita {
                         .urlIps(ips.getUrl())
                         .ModalidadCita(modalidadCita.getDescripcion())
                         .FechaCita(cita.getFechaCita())
-                        .IdPaciente(paciente.getNombres())
+                        .IdPaciente(cita.getIdPaciente()+" "+paciente.getNombres() +" "+ paciente.getApellidos() )
                         .Medico(cita.getIdMedico())
                         .IdChat(idChat)
                         .build();
                 citasDto.add(citaDTO);
             }
-
             return citasDto;
         }
         return null;
