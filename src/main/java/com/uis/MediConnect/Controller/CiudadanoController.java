@@ -34,12 +34,11 @@ public class CiudadanoController {
         this.aesEncryption = aesEncryption;
     }
 
-    @PostMapping("/ingresar")
-    ResponseEntity<Ciudadano> guardarCiudadano(@Valid @RequestBody Ciudadano ciudadano){
+    @PostMapping({"/ingresar", "/ingresar/{idRol}"})
+    ResponseEntity<Ciudadano> guardarCiudadano(@Valid @RequestBody Ciudadano ciudadano, @PathVariable(required = false) Integer idRol){
         Ciudadano ciudadanoPrueba = ciudadanoService.buscarCiudadano(ciudadano.getNumerodocumento());
         if(ciudadano != null && ciudadanoPrueba == null){
-
-            ciudadanoService.guardarCiudadano(ciudadano);
+            ciudadanoService.guardarCiudadano(ciudadano, idRol);
             return new ResponseEntity<>(ciudadano, HttpStatus.CREATED);
         }
 

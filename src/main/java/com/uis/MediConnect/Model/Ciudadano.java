@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "ciudadano")
@@ -158,5 +159,18 @@ public class Ciudadano {
                 ", password='" + password + '\'' +
                 ", urlimagenperfil='" + urlimagenperfil + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Ciudadano ciudadano = (Ciudadano) o;
+        return Objects.equals(numerodocumento, ciudadano.numerodocumento) && Objects.equals(nombres, ciudadano.nombres) && Objects.equals(apellidos, ciudadano.apellidos) && Objects.equals(fechanacimiento, ciudadano.fechanacimiento) && Objects.equals(idgenero, ciudadano.idgenero) && Objects.equals(idtiposangre, ciudadano.idtiposangre) && Objects.equals(direccion, ciudadano.direccion) && Objects.equals(numerocelular, ciudadano.numerocelular) && Objects.equals(correo, ciudadano.correo) && Objects.equals(password, ciudadano.password) && Objects.equals(urlimagenperfil, ciudadano.urlimagenperfil);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(numerodocumento, nombres, apellidos, fechanacimiento, idgenero, idtiposangre, direccion, numerocelular, correo, password, urlimagenperfil);
     }
 }

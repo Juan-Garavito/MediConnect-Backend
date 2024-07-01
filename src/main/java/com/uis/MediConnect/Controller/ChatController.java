@@ -1,6 +1,6 @@
 package com.uis.MediConnect.Controller;
 
-import com.uis.MediConnect.Config.AESEncryption;
+
 import com.uis.MediConnect.Model.Mensaje;
 import com.uis.MediConnect.Service.MensajeService;
 import org.springframework.http.HttpStatus;
@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.user.SimpUserRegistry;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,7 +22,7 @@ public class ChatController {
 
     private final MensajeService mensajeService;
 
-    public ChatController(MensajeService mensajeService, SimpUserRegistry simpUserRegistry, AESEncryption aesEncryption, AESEncryption aesEncryption1) {
+    public ChatController(MensajeService mensajeService) {
         this.mensajeService = mensajeService;;
     }
 

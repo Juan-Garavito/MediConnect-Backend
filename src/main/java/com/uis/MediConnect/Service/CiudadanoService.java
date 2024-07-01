@@ -5,7 +5,9 @@ import com.uis.MediConnect.Config.AESEncryption;
 import com.uis.MediConnect.DTO.CiudadanoDTO;
 import com.uis.MediConnect.Model.Ciudadano;
 import com.uis.MediConnect.Model.Rol;
+import com.uis.MediConnect.Model.RolCiudadano;
 import com.uis.MediConnect.Repository.CiudadanoRepository;
+import com.uis.MediConnect.Repository.RolCiudadanoRepository;
 import com.uis.MediConnect.Repository.RolRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,26 +24,40 @@ public class CiudadanoService implements ICiudadanoService{
     private final CiudadanoRepository ciudadanoRepository;
     private final RolRepository rolRepository;
     private final AESEncryption aesEncryption;
+    private final RolCiudadanoRepository  rolCiudadanoRepository;
 
     @Autowired
-    public CiudadanoService(CiudadanoRepository ciudadanoRepository, RolRepository rolRepository, AESEncryption aesEncryption) {
+    public CiudadanoService(CiudadanoRepository ciudadanoRepository, RolRepository rolRepository, AESEncryption aesEncryption, RolCiudadanoRepository rolCiudadanoRepository) {
         this.ciudadanoRepository = ciudadanoRepository;
         this.rolRepository = rolRepository;
         this.aesEncryption = aesEncryption;
+        this.rolCiudadanoRepository = rolCiudadanoRepository;
     }
 
 
     @Override
-    public Ciudadano guardarCiudadano(Ciudadano ciudadano) {
-        String contraseñaEncryptada = null;
-        try {
-            contraseñaEncryptada = aesEncryption.cifrar(ciudadano.getPassword());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+    public Ciudadano guardarCiudadano(Ciudadano ciudadano, Integer rol) {
+        Ciudadano oldCiudadano = buscarCiudadano(ciudadano.getNumerodocumento());
+        if(oldCiudadano == null){
+            String contraseñaEncryptada = null;
+            try {
+                contraseñaEncryptada = aesEncryption.cifrar(ciudadano.getPassword());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            ciudadano.setPassword(contraseñaEncryptada);
+            if(rol == null){
+                RolCiudadano rolCiudadano = new RolCiudadano(ciudadano.getNumerodocumento(), 1);
+                ciudadanoRepository.save(ciudadano);
+                rolCiudadanoRepository.save(rolCiudadano);
+                return ciudadano;
+            }
+            RolCiudadano rolCiudadano = new RolCiudadano(ciudadano.getNumerodocumento(), rol);
+            ciudadanoRepository.save(ciudadano);
+            rolCiudadanoRepository.save(rolCiudadano);
+            return ciudadano;
         }
-        ciudadano.setPassword(contraseñaEncryptada);
-        System.out.println(contraseñaEncryptada);
-        return ciudadanoRepository.save(ciudadano);
+        return null;
     }
 
     @Override
@@ -58,7 +74,14 @@ public class CiudadanoService implements ICiudadanoService{
     public Ciudadano editarCiudadano(Ciudadano ciudadano) {
         Ciudadano oldCiudadano = buscarCiudadano(ciudadano.getNumerodocumento());
         if(oldCiudadano != null){
-            return guardarCiudadano(ciudadano);
+            String contraseñaEncryptada = null;
+            try {
+                contraseñaEncryptada = aesEncryption.cifrar(ciudadano.getPassword());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            ciudadano.setPassword(contraseñaEncryptada);
+            return ciudadanoRepository.save(ciudadano);
         }
         return oldCiudadano;
     }
@@ -67,6 +90,8 @@ public class CiudadanoService implements ICiudadanoService{
     public Ciudadano eliminarCiudadano(String idCiudadano) {
         Ciudadano ciudadano = buscarCiudadano(idCiudadano);
         if(ciudadano != null){
+            RolCiudadano rolCiudadano = rolCiudadanoRepository.findByNumeroDocumento(idCiudadano);
+            rolCiudadanoRepository.delete(rolCiudadano);
             ciudadanoRepository.deleteById(idCiudadano);
             return ciudadano;
         }
@@ -83,8 +108,7 @@ public class CiudadanoService implements ICiudadanoService{
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-            System.out.println(contraseñaEncryptada);
-            System.out.println(ciudadano.getPassword());
+
             if(ciudadano.getPassword().equals(contraseñaEncryptada)){
                 List<Rol> rolLista = rolRepository.findAll();
 
