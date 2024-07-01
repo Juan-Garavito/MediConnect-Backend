@@ -89,7 +89,7 @@ public class CiudadanoTest {
     }
 
     @Test
-    @Order(4)
+    @Order(5)
     public void eliminarCiudadano() throws Exception {
         Ciudadano ciudadanoEliminado = ciudadanoService.eliminarCiudadano(ciudadano.getNumerodocumento());
         Assertions.assertTrue(ciudadanoEliminado != null, "El ciudadano no se pudo eliminar");
